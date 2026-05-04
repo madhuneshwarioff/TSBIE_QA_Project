@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSBIE QA Project Showcase</title>
+  <style>
+    :root {
+      --bg: #f5efe4;
+      --paper: rgba(255, 252, 246, 0.88);
+      --ink: #1e2430;
+      --muted: #5f6673;
+      --line: #d7c9b0;
+      --accent: #0d5c63;
+      --accent-2: #c84c09;
+      --success: #2f7d4b;
+      --danger: #a62539;
+      --warn: #9a6a00;
+      --shadow: 0 20px 60px rgba(38, 29, 13, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(200, 76, 9, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(13, 92, 99, 0.14), transparent 26%),
+        linear-gradient(180deg, #fbf6ee 0%, #f4ebdd 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .shell {
+      width: min(1200px, calc(100% - 32px));
+      margin: 24px auto 48px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(255, 250, 243, 0.92), rgba(255, 244, 224, 0.84));
+      border: 1px solid rgba(121, 92, 41, 0.18);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(13, 92, 99, 0.06) 0 1px, transparent 1px 100%),
+        linear-gradient(rgba(13, 92, 99, 0.06) 0 1px, transparent 1px 100%);
+      background-size: 28px 28px;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      padding: 52px 38px 34px;
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 4.6rem);
+      line-height: 0.95;
+      font-weight: 700;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.07rem;
+      line-height: 1.7;
+      max-width: 62ch;
+      margin: 18px 0 0;
+    }
+
+    .hero-stats {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(97, 81, 44, 0.14);
+      border-radius: 22px;
+      padding: 18px 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .ribbon {
+      margin-top: 22px;
+      display: inline-flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      border: 1px solid rgba(30, 36, 48, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .pill.pass { color: var(--success); }
+    .pill.fail { color: var(--danger); }
+    .pill.warn { color: var(--warn); }
+
+    .section {
+      margin-top: 24px;
+      background: var(--paper);
+      border: 1px solid rgba(97, 81, 44, 0.14);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 65ch;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(97, 81, 44, 0.14);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .overview-card {
+      grid-column: span 6;
+    }
+
+    .overview-card h3,
+    .deliverable-card h3,
+    .issue-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .overview-card p,
+    .deliverable-card p,
+    .issue-card p,
+    .gallery-copy,
+    .modal p {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .deliverables {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .deliverable-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .deliverable-tag {
+      align-self: flex-start;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid rgba(13, 92, 99, 0.2);
+      padding-bottom: 4px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    button,
+    .link-btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font: inherit;
+      transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button:hover,
+    .link-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: rgba(13, 92, 99, 0.09);
+      color: var(--accent);
+      border: 1px solid rgba(13, 92, 99, 0.16);
+    }
+
+    .issue-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .severity {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      margin-bottom: 12px;
+      background: rgba(166, 37, 57, 0.08);
+      color: var(--danger);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .gallery-main {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(97, 81, 44, 0.14);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .gallery-main img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #edf1f8;
+    }
+
+    .gallery-main .caption {
+      padding: 16px 18px 18px;
+    }
+
+    .caption strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .thumb {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(97, 81, 44, 0.14);
+      border-radius: 20px;
+      padding: 10px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .thumb img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .thumb span {
+      display: block;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-top: 18px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(24, 23, 19, 0.52);
+      padding: 18px;
+      z-index: 20;
+    }
+
+    .modal.open {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(640px, 100%);
+      background: #fffdf8;
+      border-radius: 26px;
+      padding: 26px;
+      border: 1px solid rgba(97, 81, 44, 0.12);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .modal-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+    }
+
+    .detail-list {
+      margin: 18px 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(97, 81, 44, 0.1);
+    }
+
+    .detail-row strong {
+      color: var(--accent);
+    }
+
+    .close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(166, 37, 57, 0.08);
+      color: var(--danger);
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner,
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .overview-card {
+        grid-column: span 12;
+      }
+
+      .issue-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 18px, 100%);
+      }
+
+      .hero-inner,
+      .section {
+        padding: 22px 18px;
+      }
+
+      .deliverables,
+      .issue-list,
+      .thumbs {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">Portfolio QA Case Study</div>
+          <h1>TSBIE Admission Flow QA Project</h1>
+          <p>
+            This webpage presents the complete QA package created for the TSBIE admission workflow review.
+            It explains the project goal, testing scope, final results, major bugs, screenshot evidence, and the
+            deliverable files prepared for GitHub submission.
+          </p>
+          <div class="ribbon">
+            <span class="pill">Functional Testing</span>
+            <span class="pill">Usability Review</span>
+            <span class="pill">Responsive Testing</span>
+            <span class="pill">Bug Documentation</span>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card">
+            <strong>12</strong>
+            <span>Total test cases executed</span>
+          </div>
+          <div class="stat-card">
+            <strong>25.0%</strong>
+            <span>Overall pass percentage</span>
+          </div>
+          <div class="stat-card">
+            <strong>8</strong>
+            <span>Documented bugs in the final report</span>
+          </div>
+          <div class="ribbon">
+            <span class="pill pass">3 Passed</span>
+            <span class="pill fail">7 Failed</span>
+            <span class="pill warn">2 Need Improvement</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Project Story</h2>
+          <p>
+            The goal of this QA project was to assess whether a student can successfully move through the public
+            admission journey, from discovering the admission button on the homepage to completing the process after
+            downloading the form.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card overview-card">
+          <h3>Testing Scope</h3>
+          <p>
+            The review covered homepage navigation, admission page access, download button behavior, absence of upload
+            and submit actions, lack of instructions, broken post-download flow, mobile responsiveness, and general UI
+            trust concerns including the invalid certificate warning on the external download destination.
+          </p>
+        </article>
+        <article class="card overview-card">
+          <h3>Final Conclusion</h3>
+          <p>
+            The first part of the journey works: users can see the admission CTA and open the admission page. However,
+            the core business flow is incomplete because users cannot upload or submit anything, receive no guidance,
+            and are pushed toward an untrusted external download host. The website is not ready for a dependable
+            end-to-end online admission experience in its current form.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Deliverable Files</h2>
+          <p>
+            Each button below gives quick file details for the document and also provides a direct open link for local review.
+          </p>
+        </div>
+      </div>
+      <div class="deliverables">
+        <article class="card deliverable-card">
+          <span class="deliverable-tag">Plan</span>
+          <h3>TestPlan.docx / TestPlan.pdf</h3>
+          <p>Project overview, scope, strategy, entry and exit criteria, and execution summary snapshot.</p>
+          <div class="actions">
+            <button class="primary" data-file="testplan-docx">File Details</button>
+            <a class="link-btn secondary" href="./TestPlan.docx">Open DOCX</a>
+            <a class="link-btn secondary" href="./TestPlan.pdf">Open PDF</a>
+          </div>
+        </article>
+
+        <article class="card deliverable-card">
+          <span class="deliverable-tag">Execution</span>
+          <h3>TestCases.xlsx</h3>
+          <p>Contains 12 executed test cases with expected result, actual result, and status columns.</p>
+          <div class="actions">
+            <button class="primary" data-file="testcases-xlsx">File Details</button>
+            <a class="link-btn secondary" href="./TestCases.xlsx">Open File</a>
+          </div>
+        </article>
+
+        <article class="card deliverable-card">
+          <span class="deliverable-tag">Defects</span>
+          <h3>BugReport.xlsx</h3>
+          <p>Includes 8 clearly logged defects with severity, priority, impact, evidence file, and status.</p>
+          <div class="actions">
+            <button class="primary" data-file="bugreport-xlsx">File Details</button>
+            <a class="link-btn secondary" href="./BugReport.xlsx">Open File</a>
+          </div>
+        </article>
+
+        <article class="card deliverable-card">
+          <span class="deliverable-tag">Evidence</span>
+          <h3>Screenshots Folder</h3>
+          <p>Contains 9 evidence images showing success points, failure points, and UX observations.</p>
+          <div class="actions">
+            <button class="primary" data-file="screenshots-folder">File Details</button>
+            <a class="link-btn secondary" href="./Screenshots/01_homepage_admission_visible.png">Open First Proof</a>
+          </div>
+        </article>
+
+        <article class="card deliverable-card">
+          <span class="deliverable-tag">Summary</span>
+          <h3>TestSummaryReport.docx / PDF</h3>
+          <p>Final result sheet with pass ratio, key findings, defect highlights, and release recommendation.</p>
+          <div class="actions">
+            <button class="primary" data-file="summary-docx">File Details</button>
+            <a class="link-btn secondary" href="./TestSummaryReport.docx">Open DOCX</a>
+            <a class="link-btn secondary" href="./TestSummaryReport.pdf">Open PDF</a>
+          </div>
+        </article>
+
+        <article class="card deliverable-card">
+          <span class="deliverable-tag">Repository</span>
+          <h3>README.md</h3>
+          <p>GitHub-facing explanation of the project structure, objective, findings, and included artifacts.</p>
+          <div class="actions">
+            <button class="primary" data-file="readme-md">File Details</button>
+            <a class="link-btn secondary" href="./README.md">Open File</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Major Findings</h2>
+          <p>
+            These were the most important issues found during testing and they are the main reason the flow was marked
+            as not production-ready.
+          </p>
+        </div>
+      </div>
+      <div class="issue-list">
+        <article class="card issue-card">
+          <span class="severity">High Severity</span>
+          <h3>No Upload Option</h3>
+          <p>Users can download the form, but there is no visible way to upload the completed form back to the website.</p>
+        </article>
+        <article class="card issue-card">
+          <span class="severity">Critical Severity</span>
+          <h3>No Submit Button</h3>
+          <p>The admission flow has no final action that allows the user to submit an application online.</p>
+        </article>
+        <article class="card issue-card">
+          <span class="severity">Medium Severity</span>
+          <h3>No Instructions</h3>
+          <p>The page does not tell users what to do after downloading the form or how to complete the journey.</p>
+        </article>
+        <article class="card issue-card">
+          <span class="severity">High Severity</span>
+          <h3>Untrusted Download Host</h3>
+          <p>The provided evidence shows the download link landing on a privacy warning with certificate mismatch.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Evidence Gallery</h2>
+          <p>
+            This gallery summarizes the proof collected for the QA package. Click any thumbnail to switch the main preview.
+          </p>
+        </div>
+      </div>
+      <div class="gallery">
+        <div class="gallery-main">
+          <img id="galleryImage" src="./Screenshots/01_homepage_admission_visible.png" alt="QA evidence preview">
+          <div class="caption">
+            <strong id="galleryTitle">Homepage admission CTA visible</strong>
+            <p class="gallery-copy" id="galleryText">Landing page proof showing that the admission entry point is available to users.</p>
+          </div>
+        </div>
+        <div class="thumbs">
+          <button class="thumb" data-img="./Screenshots/01_homepage_admission_visible.png" data-title="Homepage admission CTA visible" data-text="Landing page proof showing that the admission entry point is available to users.">
+            <img src="./Screenshots/01_homepage_admission_visible.png" alt="">
+            <span>Homepage entry point</span>
+          </button>
+          <button class="thumb" data-img="./Screenshots/02_admission_page_opened.png" data-title="Admission page opened successfully" data-text="Navigation works from the homepage to the admission section.">
+            <img src="./Screenshots/02_admission_page_opened.png" alt="">
+            <span>Admission page open</span>
+          </button>
+          <button class="thumb" data-img="./Screenshots/03_no_upload_option.png" data-title="No upload option visible" data-text="The page exposes no upload field, browse button, or return flow for the completed form.">
+            <img src="./Screenshots/03_no_upload_option.png" alt="">
+            <span>No upload option</span>
+          </button>
+          <button class="thumb" data-img="./Screenshots/04_no_submit_button.png" data-title="No submit action exists" data-text="Users have no way to complete the journey after reaching the admission page.">
+            <img src="./Screenshots/04_no_submit_button.png" alt="">
+            <span>No submit action</span>
+          </button>
+          <button class="thumb" data-img="./Screenshots/05_no_instructions.png" data-title="No user instructions shown" data-text="The journey does not explain next steps, required inputs, or submission guidance.">
+            <img src="./Screenshots/05_no_instructions.png" alt="">
+            <span>Missing instructions</span>
+          </button>
+          <button class="thumb" data-img="./Screenshots/07_invalid_certificate_warning.png" data-title="Certificate warning on download link" data-text="The external host appears untrusted and triggers a browser privacy warning in the supplied proof.">
+            <img src="./Screenshots/07_invalid_certificate_warning.png" alt="">
+            <span>Invalid certificate warning</span>
+          </button>
+        </div>
+      </div>
+      <p class="footer-note">
+        Evidence folder also includes broken-flow, mobile-layout, and UI observation images for the remaining findings.
+      </p>
+    </section>
+  </div>
+
+  <div class="modal" id="fileModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="close" id="closeModal" aria-label="Close dialog">×</button>
+      <h3 id="modalTitle">File Details</h3>
+      <p id="modalDescription"></p>
+      <div class="detail-list" id="modalDetails"></div>
+      <div class="actions">
+        <a class="link-btn primary" id="modalOpenLink" href="./">Open File</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fileData = {
+      "testplan-docx": {
+        title: "Test Plan Files",
+        description: "These files explain the project purpose, test scope, strategy, deliverables, and summary metrics.",
+        openLabel: "Open TestPlan.docx",
+        href: "./TestPlan.docx",
+        details: [
+          ["Files", "TestPlan.docx and TestPlan.pdf"],
+          ["Role", "Project overview and QA planning document"],
+          ["File size", "DOCX: 37,627 bytes | PDF: 109,148 bytes"],
+          ["Key content", "Scope, test strategy, entry criteria, exit criteria, deliverables"],
+          ["Status", "Completed and ready for GitHub"]
+        ]
+      },
+      "testcases-xlsx": {
+        title: "TestCases.xlsx",
+        description: "The execution workbook containing the full test case list and summary sheet.",
+        openLabel: "Open TestCases.xlsx",
+        href: "./TestCases.xlsx",
+        details: [
+          ["File", "TestCases.xlsx"],
+          ["File size", "8,270 bytes"],
+          ["Cases executed", "12"],
+          ["Sheets", "Summary, Test Cases"],
+          ["Result mix", "3 Passed, 7 Failed, 2 Need Improvement"]
+        ]
+      },
+      "bugreport-xlsx": {
+        title: "BugReport.xlsx",
+        description: "The defect log capturing the issues found during QA execution.",
+        openLabel: "Open BugReport.xlsx",
+        href: "./BugReport.xlsx",
+        details: [
+          ["File", "BugReport.xlsx"],
+          ["File size", "9,203 bytes"],
+          ["Bug count", "8"],
+          ["Sheets", "Bug Report, Bug Metrics"],
+          ["Highlights", "Severity, priority, impact, evidence mapping, status"]
+        ]
+      },
+      "screenshots-folder": {
+        title: "Screenshots Evidence Folder",
+        description: "A structured evidence pack for the major pass points, failures, and observations in the project.",
+        openLabel: "Open First Screenshot",
+        href: "./Screenshots/01_homepage_admission_visible.png",
+        details: [
+          ["Folder", "Screenshots/"],
+          ["Image count", "9 evidence files"],
+          ["Evidence themes", "Homepage, admission page, broken flow, missing actions, mobile view, UI notes"],
+          ["Approx sizes", "47 KB to 57 KB each"],
+          ["Purpose", "Bug proof and project presentation support"]
+        ]
+      },
+      "summary-docx": {
+        title: "Test Summary Files",
+        description: "The final QA conclusion with result metrics, key findings, and recommendation.",
+        openLabel: "Open TestSummaryReport.docx",
+        href: "./TestSummaryReport.docx",
+        details: [
+          ["Files", "TestSummaryReport.docx and TestSummaryReport.pdf"],
+          ["Role", "Final results and release recommendation"],
+          ["File size", "DOCX: 37,716 bytes | PDF: 211,056 bytes"],
+          ["Pass rate", "25.0%"],
+          ["Recommendation", "Not ready for a dependable end-to-end online admission flow"]
+        ]
+      },
+      "readme-md": {
+        title: "README.md",
+        description: "The repository explanation written for GitHub viewers and recruiters.",
+        openLabel: "Open README.md",
+        href: "./README.md",
+        details: [
+          ["File", "README.md"],
+          ["File size", "1,652 bytes"],
+          ["Audience", "GitHub viewers, reviewers, recruiters"],
+          ["Includes", "Objective, deliverables, summary, main findings, folder structure"],
+          ["Status", "Ready to publish"]
+        ]
+      }
+    };
+
+    const modal = document.getElementById("fileModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalDetails = document.getElementById("modalDetails");
+    const modalOpenLink = document.getElementById("modalOpenLink");
+    const closeModal = document.getElementById("closeModal");
+
+    document.querySelectorAll("[data-file]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const data = fileData[button.dataset.file];
+        modalTitle.textContent = data.title;
+        modalDescription.textContent = data.description;
+        modalOpenLink.textContent = data.openLabel;
+        modalOpenLink.href = data.href;
+        modalDetails.innerHTML = data.details.map(([label, value]) => `
+          <div class="detail-row">
+            <strong>${label}</strong>
+            <span>${value}</span>
+          </div>
+        `).join("");
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+      });
+    });
+
+    function hideModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    closeModal.addEventListener("click", hideModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) hideModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") hideModal();
+    });
+
+    const galleryImage = document.getElementById("galleryImage");
+    const galleryTitle = document.getElementById("galleryTitle");
+    const galleryText = document.getElementById("galleryText");
+
+    document.querySelectorAll(".thumb").forEach((thumb) => {
+      thumb.addEventListener("click", () => {
+        galleryImage.src = thumb.dataset.img;
+        galleryTitle.textContent = thumb.dataset.title;
+        galleryText.textContent = thumb.dataset.text;
+      });
+    });
+  </script>
+</body>
+</html>
